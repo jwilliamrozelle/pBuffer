@@ -35,13 +35,13 @@
 
 
 pb_countFeatures <- function(displaced.sf, 
-                             features2count.sf, 
-                             radiusLength = 1e4,
-                             displaced.id = "DHSID", 
-                             densityBuffer = densitybuffer, 
-                             adminBound = NULL, 
-                             adminID = "ID_2",
-                             n.cores = 1) {
+                              features2count.sf, 
+                              radiusLength = 1e4,
+                              displaced.id = "DHSID", 
+                              densityBuffer = densitybuffer, 
+                              adminBound = NULL, 
+                              adminID = "ID_2",
+                              n.cores = 1) {
   
   
   # ERRORS!
@@ -130,15 +130,15 @@ pb_countFeatures <- function(displaced.sf,
           
           singleBuffs.sf <- st_buffer(singleDens.sf, radiusLength)
           
-          sb <- st_intersection(features2count.sf, singleBuffs.sf)
+          # intersection.sf <- st_intersection(features2count.sf, singleBuffs.sf)
           
           singleBuffs.sf$pt_count <- lengths(st_intersects(singleBuffs.sf, features2count.sf))
           
-          numFeatures.df <- st_drop_geometry(singleBuffs.sf) %>% group_by(pt_count) %>% summarise(weights = sum(layer, na.rm = T)) |
-            
-            
-            # Get the maximum likelihood number of features as single row data.frame
-            ml_featureCount.df <- filter(numFeatures.df, weights == max(weights, na.rm = T)) |> as.data.frame()
+          numFeatures.df <- st_drop_geometry(singleBuffs.sf) %>% group_by(pt_count) %>% summarise(weights = sum(layer, na.rm = T)) |> as.data.frame()
+          
+          
+          # Get the maximum likelihood number of features as single row data.frame
+          ml_featureCount.df <- filter(numFeatures.df, weights == max(weights, na.rm = T)) |> as.data.frame()
           # add the unique ID to the single row data.frame
           ml_featureCount.df[[displaced.id]] <- rowDHSID
           
@@ -202,15 +202,15 @@ pb_countFeatures <- function(displaced.sf,
         
         singleBuffs.sf <- st_buffer(singleDens.sf, radiusLength)
         
-        sb <- st_intersection(features2count.sf, singleBuffs.sf)
+        # intersection.sf <- st_intersection(features2count.sf, singleBuffs.sf)
         
         singleBuffs.sf$pt_count <- lengths(st_intersects(singleBuffs.sf, features2count.sf))
         
-        numFeatures.df <- st_drop_geometry(singleBuffs.sf) %>% group_by(pt_count) %>% summarise(weights = sum(layer, na.rm = T)) |
-          
-          
-          # Get the maximum likelihood number of features as single row data.frame
-          ml_featureCount.df <- filter(numFeatures.df, weights == max(weights, na.rm = T)) |> as.data.frame()
+        numFeatures.df <- st_drop_geometry(singleBuffs.sf) %>% group_by(pt_count) %>% summarise(weights = sum(layer, na.rm = T)) |> as.data.frame()
+        
+        
+        # Get the maximum likelihood number of features as single row data.frame
+        ml_featureCount.df <- filter(numFeatures.df, weights == max(weights, na.rm = T)) |> as.data.frame()
         # add the unique ID to the single row data.frame
         ml_featureCount.df[[displaced.id]] <- rowDHSID
         
