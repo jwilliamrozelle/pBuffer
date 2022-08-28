@@ -1,0 +1,13 @@
+Package: pBuffer
+Type: Package
+Title: figured
+Version: 20220825.01
+Authors@R: person("Jeffrey", "Rozelle", email = "jwrozelle@figured.io",
+                  role = c("aut", "cre"))
+Description: Tools for working with displaced cluster locations in the Demographic and Health Surveys
+License: GNU 3
+Encoding: UTF-8
+LazyData: true
+SystemRequirements: R version >= 4.2.0
+Imports: raster, calculus, future, future.apply, iotools, sf, dplyr
+RoxygenNote: 7.2.1
