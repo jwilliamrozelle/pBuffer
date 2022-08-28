@@ -1,6 +1,6 @@
-#' @name pb_quickExtract
-#' @rdname pb_quickExtract
-#' @title  pb_quickExtract
+#' @name pb_quickRasterValJoin
+#' @rdname pb_quickRasterValJoin
+#' @title  pb_quickRasterValJoin
 #'
 #' @description For each given displaced community, estimates the raster value based on the probability weighted mean of possible true locations
 #' 
@@ -18,14 +18,14 @@
 #' @author J.W. Rozelle
 #'
 #'
-#' @export pb_quickExtract
+#' @export pb_quickRasterValJoin
 #' @examples
 #'
 #' # coming soon!
 #' 
 
 
-pb_quickExtract <- function(displaced.sf, inputRaster, bufferlengths = 5000, adminBound = haiti_adm2, adminID = "ID_2", n.cores = 1) {
+pb_quickRasterValJoin <- function(displaced.sf, inputRaster, bufferlengths = 5000, adminBound = haiti_adm2, adminID = "ID_2", n.cores = 1) {
   
   warning("If the input raster has missing values, any probability buffer points that fall on the missing raster values will be excluded from the weighted score.")
   
@@ -151,11 +151,11 @@ pb_quickExtract <- function(displaced.sf, inputRaster, bufferlengths = 5000, adm
               rm(singleAdminBound, singleAdminBound.poly)
             }
             
-            # change all values that don't fall within the buffer to 0
-            singleBufferRaster.list[[i]] <- raster::mask(inputRaster, singleBuffer.list[[i]]) |> suppressWarnings()
-            
-            # mask based on the administrative bounadries
-            singleBufferRaster.list[[i]] <- raster::mask(singleBufferRaster.list[[i]], singleAdminBound.poly)
+            # # change all values that don't fall within the buffer to 0
+            # singleBufferRaster.list[[i]] <- raster::mask(inputRaster, singleBuffer.list[[i]]) |> suppressWarnings()
+            # 
+            # # mask based on the administrative bounadries
+            # singleBufferRaster.list[[i]] <- raster::mask(singleBufferRaster.list[[i]], singleAdminBound.poly)
             
             # trim the excess NA's
             singleBufferRaster.list[[i]] <- raster::trim(singleBufferRaster.list[[i]]) |> suppressWarnings()
