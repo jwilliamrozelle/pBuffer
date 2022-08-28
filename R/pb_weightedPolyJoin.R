@@ -67,8 +67,18 @@ pb_weightedPolyJoin <- function(displaced.sf,
             inputCRS = crs2use
           )
           
-          # Trim the weighted raster
-          singleDens.raster <- trimProbBuff(singleDens.raster, adminBound = adminBound)
+          # If the administrative boundary is defined
+          if (!is.null(adminBound)) {
+            # get the single admin boundary for a community
+            singleAdminBound <- suppressWarnings(sf::st_intersection(singleComm, adminBound))
+            singleAdminBound.poly <- dplyr::filter(adminBound, adminID == singleAdminBound$adminID[1])
+            
+            # Trim the weighted raster
+            singleDens.raster <- trimProbBuff(singleDens.raster, adminBound = adminBound)
+            rm(singleAdminBound, singleAdminBound.poly)
+          }
+          
+          
           
           # turn these into a point object
           singleDens.sf <- st_rasterAsPoint(singleDens.raster)
@@ -103,7 +113,7 @@ pb_weightedPolyJoin <- function(displaced.sf,
     
     closestHFs <- apply(st_drop_geometry(displaced.sf), 1, function(x) {
       
-      rowDHSID <- x[polygons.sf]
+      rowDHSID <- x[displaced.id]
       
       # extract an sf object for each row of the data frame
       singleComm <- filter(displaced.sf, DHSID == rowDHSID)
@@ -118,8 +128,18 @@ pb_weightedPolyJoin <- function(displaced.sf,
           inputCRS = crs2use
         )
         
-        # Trim the weighted raster
-        singleDens.raster <- trimProbBuff(singleDens.raster, adminBound = adminBound)
+        # If the administrative boundary is defined
+        if (!is.null(adminBound)) {
+          # get the single admin boundary for a community
+          singleAdminBound <- suppressWarnings(sf::st_intersection(singleComm, adminBound))
+          singleAdminBound.poly <- dplyr::filter(adminBound, adminID == singleAdminBound$adminID[1])
+          
+          # Trim the weighted raster
+          singleDens.raster <- trimProbBuff(singleDens.raster, adminBound = adminBound)
+          rm(singleAdminBound, singleAdminBound.poly)
+        }
+        
+        
         
         # turn these into a point object
         singleDens.sf <- st_rasterAsPoint(singleDens.raster)

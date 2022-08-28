@@ -130,10 +130,6 @@ pb_quickExtract <- function(displaced.sf, inputRaster, bufferlengths = 5000, adm
           stop(paste0("There are multiple observations with the same DHSID: ", rowDHSID))
         }
         
-        # get the single admin boundary for a community
-        singleAdminBound <- suppressWarnings(sf::st_intersection(singleComm, adminBound))
-        singleAdminBound.poly <- dplyr::filter(adminBound, adminID == singleAdminBound$adminID[1])
-        
         
         if (st_coordinates(singleComm)[2] != 0) {
           
@@ -143,6 +139,17 @@ pb_quickExtract <- function(displaced.sf, inputRaster, bufferlengths = 5000, adm
             
             # create a buffer for the community
             singleBuffer.list[[i]] <- st_buffer(singleComm, bufferlengths[i]+(max(raster.res)*2)) |> suppressWarnings()
+            
+            # If the administrative boundary is defined
+            if (!is.null(adminBound)) {
+              # get the single admin boundary for a community
+              singleAdminBound <- suppressWarnings(sf::st_intersection(singleComm, adminBound))
+              singleAdminBound.poly <- dplyr::filter(adminBound, adminID == singleAdminBound$adminID[1])
+              
+              # Trim the weighted raster
+              singleBuffer.list[[i]] <- trimProbBuff(singleBuffer.list[[i]], adminBound = singleAdminBound.poly)
+              rm(singleAdminBound, singleAdminBound.poly)
+            }
             
             # change all values that don't fall within the buffer to 0
             singleBufferRaster.list[[i]] <- raster::mask(inputRaster, singleBuffer.list[[i]]) |> suppressWarnings()
@@ -155,7 +162,7 @@ pb_quickExtract <- function(displaced.sf, inputRaster, bufferlengths = 5000, adm
             
             # rasterRows 
             rasterRows <- dim(singleBufferRaster.list[[i]])[1]
-            rasterCols <- dim(singleBufferRaster.list[[i]])[1]
+            rasterCols <- dim(singleBufferRaster.list[[i]])[2]
             
             # RASTER CENTER POINT
             singleCoords <- st_coordinates(singleComm)
@@ -231,10 +238,6 @@ pb_quickExtract <- function(displaced.sf, inputRaster, bufferlengths = 5000, adm
         stop(paste0("There are multiple observations with the same DHSID: ", rowDHSID))
       }
       
-      # get the single admin boundary for a community
-      singleAdminBound <- suppressWarnings(sf::st_intersection(singleComm, adminBound))
-      singleAdminBound.poly <- dplyr::filter(adminBound, adminID == singleAdminBound$adminID[1])
-      
       
       if (st_coordinates(singleComm)[2] != 0) {
         
@@ -244,6 +247,17 @@ pb_quickExtract <- function(displaced.sf, inputRaster, bufferlengths = 5000, adm
           
           # create a buffer for the community
           singleBuffer.list[[i]] <- st_buffer(singleComm, bufferlengths[i]+(max(raster.res)*2)) |> suppressWarnings()
+          
+          # If the administrative boundary is defined
+          if (!is.null(adminBound)) {
+            # get the single admin boundary for a community
+            singleAdminBound <- suppressWarnings(sf::st_intersection(singleComm, adminBound))
+            singleAdminBound.poly <- dplyr::filter(adminBound, adminID == singleAdminBound$adminID[1])
+            
+            # Trim the weighted raster
+            singleBuffer.list[[i]] <- trimProbBuff(singleBuffer.list[[i]], adminBound = singleAdminBound.poly)
+            rm(singleAdminBound, singleAdminBound.poly)
+          }
           
           # change all values that don't fall within the buffer to 0
           singleBufferRaster.list[[i]] <- raster::mask(inputRaster, singleBuffer.list[[i]]) |> suppressWarnings()
@@ -256,7 +270,7 @@ pb_quickExtract <- function(displaced.sf, inputRaster, bufferlengths = 5000, adm
           
           # rasterRows 
           rasterRows <- dim(singleBufferRaster.list[[i]])[1]
-          rasterCols <- dim(singleBufferRaster.list[[i]])[1]
+          rasterCols <- dim(singleBufferRaster.list[[i]])[2]
           
           # RASTER CENTER POINT
           singleCoords <- st_coordinates(singleComm)
