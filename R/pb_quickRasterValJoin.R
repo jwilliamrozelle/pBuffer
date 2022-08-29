@@ -25,7 +25,12 @@
 #' 
 
 
-pb_quickRasterValJoin <- function(displaced.sf, inputRaster, bufferlengths = 5000, adminBound = NULL, adminID = NULL, n.cores = 1) {
+pb_quickRasterValJoin <- function(displaced.sf, 
+                                   inputRaster, 
+                                   bufferlengths = 5000, 
+                                   adminBound = NULL, 
+                                   adminID = NULL, 
+                                   n.cores = 1) {
   
   # ERRORS!
   #   displaced.sf is the wrong class
@@ -180,13 +185,15 @@ pb_quickRasterValJoin <- function(displaced.sf, inputRaster, bufferlengths = 500
               singleAdminBound <- suppressWarnings(sf::st_intersection(singleComm, adminBound))
               singleAdminBound.poly <- dplyr::filter(adminBound, adminID == singleAdminBound$adminID[1])
               
+              # change all values that don't fall within the buffer to 0
+              singleBufferRaster.list[[i]] <- raster::mask(inputRaster, singleBuffer.list[[i]]) |> suppressWarnings()
+              
               # Trim the weighted raster
-              singleBuffer.list[[i]] <- trimProbBuff(singleBuffer.list[[i]], adminBound = singleAdminBound.poly)
+              singleBufferRaster.list[[i]] <- trimProbBuff(singleBufferRaster.list[[i]], adminBound = singleAdminBound.poly)
               rm(singleAdminBound, singleAdminBound.poly)
             }
             
-            # # change all values that don't fall within the buffer to 0
-            # singleBufferRaster.list[[i]] <- raster::mask(inputRaster, singleBuffer.list[[i]]) |> suppressWarnings()
+            
             # 
             # # mask based on the administrative bounadries
             # singleBufferRaster.list[[i]] <- raster::mask(singleBufferRaster.list[[i]], singleAdminBound.poly)
@@ -288,16 +295,18 @@ pb_quickRasterValJoin <- function(displaced.sf, inputRaster, bufferlengths = 500
             singleAdminBound <- suppressWarnings(sf::st_intersection(singleComm, adminBound))
             singleAdminBound.poly <- dplyr::filter(adminBound, adminID == singleAdminBound$adminID[1])
             
+            # change all values that don't fall within the buffer to 0
+            singleBufferRaster.list[[i]] <- raster::mask(inputRaster, singleBuffer.list[[i]]) |> suppressWarnings()
+            
             # Trim the weighted raster
-            singleBuffer.list[[i]] <- trimProbBuff(singleBuffer.list[[i]], adminBound = singleAdminBound.poly)
+            singleBufferRaster.list[[i]] <- trimProbBuff(singleBufferRaster.list[[i]], adminBound = singleAdminBound.poly)
             rm(singleAdminBound, singleAdminBound.poly)
           }
           
-          # change all values that don't fall within the buffer to 0
-          singleBufferRaster.list[[i]] <- raster::mask(inputRaster, singleBuffer.list[[i]]) |> suppressWarnings()
           
-          # mask based on the administrative bounadries
-          singleBufferRaster.list[[i]] <- raster::mask(singleBufferRaster.list[[i]], singleAdminBound.poly)
+          # 
+          # # mask based on the administrative bounadries
+          # singleBufferRaster.list[[i]] <- raster::mask(singleBufferRaster.list[[i]], singleAdminBound.poly)
           
           # trim the excess NA's
           singleBufferRaster.list[[i]] <- raster::trim(singleBufferRaster.list[[i]]) |> suppressWarnings()
