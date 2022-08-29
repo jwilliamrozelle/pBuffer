@@ -40,7 +40,7 @@ pb_countFeatures <- function(displaced.sf,
                               displaced.id = "DHSID", 
                               densityBuffer = densitybuffer, 
                               adminBound = NULL, 
-                              adminID = "ID_2",
+                              adminID = NULL,
                               n.cores = 1) {
   
   
@@ -50,7 +50,7 @@ pb_countFeatures <- function(displaced.sf,
     stop("displaced.sf is not of class sf. It must be point features of class sf")
   }
   #   features2count.sf is the wrong class
-  if (!"sf" %in% class(displaced.sf)) {
+  if (!"sf" %in% class(features2count.sf)) {
     stop("features2count.sf is not of class sf. It must be point features of class sf")
   }
   #   adminbBound is the wrong class

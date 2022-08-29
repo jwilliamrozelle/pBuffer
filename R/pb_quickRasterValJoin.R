@@ -25,7 +25,41 @@
 #' 
 
 
-pb_quickRasterValJoin <- function(displaced.sf, inputRaster, bufferlengths = 5000, adminBound = haiti_adm2, adminID = "ID_2", n.cores = 1) {
+pb_quickRasterValJoin <- function(displaced.sf, inputRaster, bufferlengths = 5000, adminBound = NULL, adminID = NULL, n.cores = 1) {
+  
+  # ERRORS!
+  #   displaced.sf is the wrong class
+  if (!"sf" %in% class(displaced.sf)) {
+    stop("displaced.sf is not of class sf. It must be point features of class sf")
+  }
+  #   features2count.sf is the wrong class
+  if (!"RasterLayer" %in% class(inputRaster)) {
+    stop("inputRaster is not of class 'raster'. It must be point features of class 'raster'")
+  }
+  #   adminbBound is the wrong class
+  if (!is.null(adminBound) & !"sf" %in% class(adminBound)) {
+    stop("adminBound is not of class sf. It must be polygon features of class sf")
+  }
+  
+  #   ensure that the adminBound sf object contains the unique ID
+  if (!adminID %in% names(adminBound)) {
+    stop(paste0(adminID, " is not found in the adminBound sf object."))
+  }
+  
+  if (!is.null(adminBound)) {
+    if (sum(duplicated(adminBound[[adminID]])) > 0) {
+      stop("adminID must specify a uniquely valid ID for the adminbound object")
+    }
+  }
+  
+  #   ensure that the displaced.sf sf object contains the unique ID
+  if (!displaced.id %in% names(displaced.sf)) {
+    stop(paste0(displaced.id, " is not found in the displaced.sf sf object."))
+  }
+  
+  if (sum(duplicated(displaced.sf[[displaced.id]])) > 0) {
+    stop("displaced.id must specify a uniquely valid ID for the displaced.sf object")
+  }
   
   warning("If the input raster has missing values, any probability buffer points that fall on the missing raster values will be excluded from the weighted score.")
   
