@@ -11,7 +11,7 @@ pb_countFeatures(
   displaced.id = "DHSID",
   densityBuffer = densitybuffer,
   adminBound = NULL,
-  adminID = "ID_2",
+  adminID = NULL,
   n.cores = 1
 )
 }
