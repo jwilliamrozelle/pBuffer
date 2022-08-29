@@ -26,11 +26,11 @@
 
 
 pb_quickRasterValJoin <- function(displaced.sf, 
-                                   inputRaster, 
-                                   bufferlengths = 5000, 
-                                   adminBound = NULL, 
-                                   adminID = NULL, 
-                                   n.cores = 1) {
+                                  inputRaster, 
+                                  bufferlengths = 5000, 
+                                  adminBound = NULL, 
+                                  adminID = NULL, 
+                                  n.cores = 1) {
   
   # ERRORS!
   #   displaced.sf is the wrong class
@@ -189,7 +189,7 @@ pb_quickRasterValJoin <- function(displaced.sf,
               singleBufferRaster.list[[i]] <- raster::mask(inputRaster, singleBuffer.list[[i]]) |> suppressWarnings()
               
               # Trim the weighted raster
-              singleBufferRaster.list[[i]] <- trimProbBuff(singleBufferRaster.list[[i]], adminBound = singleAdminBound.poly)
+              singleBufferRaster.list[[i]] <- raster::mask(singleBufferRaster.list[[i]], singleAdminBound.poly) |> suppressWarnings()
               rm(singleAdminBound, singleAdminBound.poly)
             }
             
@@ -299,7 +299,7 @@ pb_quickRasterValJoin <- function(displaced.sf,
             singleBufferRaster.list[[i]] <- raster::mask(inputRaster, singleBuffer.list[[i]]) |> suppressWarnings()
             
             # Trim the weighted raster
-            singleBufferRaster.list[[i]] <- trimProbBuff(singleBufferRaster.list[[i]], adminBound = singleAdminBound.poly)
+            singleBufferRaster.list[[i]] <- raster::mask(singleBufferRaster.list[[i]], singleAdminBound.poly) |> suppressWarnings()
             rm(singleAdminBound, singleAdminBound.poly)
           }
           
