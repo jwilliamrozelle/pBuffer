@@ -10,9 +10,14 @@
 #' @param displaced.sf Displaced coordinates in an sf object type.
 #' @param features2count.sf sf point feature that is counted.
 #' @param limitDist a numeric vector to determine the distance from a displaced community within which the number of features2count.sf will be counted.
+#' @param displaced.id a character vector of the column name specifying the unique ID of the displaced communities
+#' @param features2count.id a charactor vector of the column name specifying the unique ID of the point features being connected
+#' @param metrics Character vector of column names containing the numeric metrics you wish to calculate.
 #' @param densityBuffer A density buffer list object created with the pb_integratedDens function.
 #' @param adminBound (Optional) the administrative boundary that circumscribes the displacement.
-#' @param adminID The unique ID for the adminBound features, defaults to "ID_2".
+#' @param adminID The unique ID for the adminBound features.
+#' @param weightedMedian Boolean value, if true, the weighted median will be calculated. If false, the weighted mean will be calculated. Defaults to true.
+#' @param probCuts A numeric vector containing values  between 0 and 1, these are percentiles to report the credible interval of distances
 #' @param n.cores This allows for parallelization using the futures package. This can be slightly unstable, but normally functions well and dramatically speeds compute time when it does. n.cores specifies the number of cores to use. The default is 1, and does not parallelize.
 #'
 #' @author J.W. Rozelle
