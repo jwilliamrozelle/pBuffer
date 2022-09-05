@@ -1,6 +1,6 @@
-#' @name pb_countFeatures
-#' @rdname pb_countFeatures
-#' @title  pb_countFeatures
+#' @name pb_radiusLimitJoin
+#' @rdname pb_radiusLimitJoin
+#' @title  pb_radiusLimitJoin
 #'
 #' @description For each given displaced community, estimates the raster value based on the probability weighted mean of possible true locations
 #' 
@@ -23,7 +23,7 @@
 #' @author J.W. Rozelle
 #'
 #'
-#' @export pb_countFeatures
+#' @export pb_radiusLimitJoin
 #' @examples
 #'
 #' # coming soon!
